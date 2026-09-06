@@ -6,7 +6,7 @@
   <parent>
     <groupId>io.github.rrmadon26</groupId>
     <artifactId>palang-parent</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
   </parent>
 
   <artifactId>palang-idempotency-spring-boot-starter</artifactId>
