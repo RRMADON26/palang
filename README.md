@@ -121,6 +121,7 @@ matter only appear when callers genuinely overlap.
 - [Idempotency starter — full configuration and edge cases](palang-idempotency-spring-boot-starter/README.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
+- [Releasing](RELEASING.md)
 
 ## Status
 
