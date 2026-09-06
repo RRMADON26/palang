@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.github.rrmadon26</groupId>
+    <groupId>com.rrmadon</groupId>
     <artifactId>palang-parent</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
   </parent>
 
   <artifactId>palang-idempotency-spring-boot-starter</artifactId>
@@ -15,7 +15,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>io.github.rrmadon26</groupId>
+      <groupId>com.rrmadon</groupId>
       <artifactId>palang-core</artifactId>
     </dependency>
     <dependency>
@@ -39,7 +39,7 @@
     </dependency>
 
     <dependency>
-      <groupId>io.github.rrmadon26</groupId>
+      <groupId>com.rrmadon</groupId>
       <artifactId>palang-testkit</artifactId>
       <scope>test</scope>
     </dependency>

@@ -4,15 +4,25 @@
 
 ### 1. Claim the namespace
 
-Sign in to [central.sonatype.com](https://central.sonatype.com) with GitHub, then
-register the namespace `io.github.rrmadon26`.
+Sign in to [central.sonatype.com](https://central.sonatype.com), then register the
+namespace `com.rrmadon`.
 
-Verification is automated and takes minutes: the Portal issues a verification key,
-you create a public repository under `RRMADON26` named exactly that key, then press
-verify. Delete the repository afterwards.
+Ownership of `rrmadon.com` is proved with a DNS TXT record. The Portal issues a
+verification key; add it as a TXT record on the apex domain, then press verify.
+DNS for this domain is on Vercel, so the record goes in the Vercel dashboard under
+the domain's DNS settings.
 
-The namespace must match the GitHub account. `io.github.<name>` can only be claimed
-by the owner of `github.com/<name>`.
+```
+Type   TXT
+Name   @
+Value  <verification key from the Portal>
+```
+
+Verification is automated and usually completes within minutes of the record
+propagating. The TXT record can be removed afterwards.
+
+Verifying `com.rrmadon` also grants every namespace beneath it, so a future
+`com.rrmadon.something` needs no further verification.
 
 ### 2. Create a signing key
 

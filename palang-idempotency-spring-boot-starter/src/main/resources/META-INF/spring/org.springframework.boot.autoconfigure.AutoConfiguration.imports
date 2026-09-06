@@ -1,2 +1,2 @@
-io.github.rrmadon26.palang.idempotency.RedisIdempotencyAutoConfiguration
-io.github.rrmadon26.palang.idempotency.IdempotencyAutoConfiguration
+com.rrmadon.palang.idempotency.RedisIdempotencyAutoConfiguration
+com.rrmadon.palang.idempotency.IdempotencyAutoConfiguration
