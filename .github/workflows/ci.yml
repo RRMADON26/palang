@@ -39,7 +39,7 @@ jobs:
       - name: Build, test and verify
         env:
           PALANG_REQUIRE_REDIS: 'true'
-        run: mvn -B -T1C verify
+        run: ./mvnw -B -T1C verify
 
       - name: Publish test report
         if: always()

@@ -5,7 +5,7 @@
 Requires JDK 21.
 
 ```bash
-mvn verify
+./mvnw verify
 ```
 
 The distributed test suite needs a Redis on `127.0.0.1:6379`:

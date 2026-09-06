@@ -57,7 +57,7 @@ namespace is being verified.
 <dependency>
   <groupId>com.github.RRMADON26.palang</groupId>
   <artifactId>palang-idempotency-spring-boot-starter</artifactId>
-  <version>v0.1.1</version>
+  <version>v0.1.2</version>
 </dependency>
 ```
 
@@ -124,7 +124,7 @@ matter only appear when callers genuinely overlap.
 
 ## Status
 
-`v0.1.1` — the idempotency module is complete and tested, including 32 concurrent
+`v0.1.2` — the idempotency module is complete and tested, including 32 concurrent
 callers against a real Redis. The API may still change before `1.0`.
 
 Planned: rate limiting, resilience presets, and correlation-ID propagation, each as

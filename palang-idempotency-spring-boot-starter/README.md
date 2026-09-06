@@ -111,7 +111,7 @@ The distributed suite needs a Redis:
 
 ```bash
 docker run -d -p 6379:6379 redis:7-alpine
-mvn verify
+./mvnw verify
 ```
 
 Without one it is skipped. In CI, `PALANG_REQUIRE_REDIS=true` turns an unreachable

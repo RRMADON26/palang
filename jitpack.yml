@@ -1,14 +1,15 @@
 # JitPack builds release artifacts straight from the git tag.
 #
-# JDK 21 is not JitPack's default, and without pinning it the build fails on the
-# language features this project uses (records, sealed interfaces, pattern matching
-# for switch).
+# JDK 21 is not JitPack's default, and its bundled Maven is older than 3.6.3 —
+# old enough that it binds maven-compiler-plugin 3.1, which predates the 'release'
+# parameter and silently compiles at source level 5. The wrapper pins Maven 3.9.9
+# so this build behaves identically here, in CI, and on a contributor's machine.
 #
-# Tests are skipped here because JitPack is an artifact builder, not a test
-# environment: it has no Redis, so the distributed suite could only skip. CI already
-# ran the full suite against a real Redis before this tag existed.
+# Tests are skipped because JitPack is an artifact builder, not a test environment:
+# it has no Redis, so the distributed suite could only skip. CI runs the full suite
+# against a real Redis before any tag exists.
 jdk:
   - openjdk21
 
 install:
-  - mvn install -DskipTests -B
+  - ./mvnw install -DskipTests -B
