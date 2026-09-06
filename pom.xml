@@ -25,6 +25,7 @@
     <developer>
       <id>RRMADON26</id>
       <name>Rizky Romadon</name>
+      <email>dev.rrmadon@gmail.com</email>
       <url>https://github.com/RRMADON26</url>
     </developer>
   </developers>
@@ -130,4 +131,87 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <!--
+        Everything Maven Central demands beyond an ordinary build: sources,
+        javadoc, and a GPG signature per file. Confined to a profile so a
+        contributor running ./mvnw verify never needs a signing key.
+
+        Publish with:  ./mvnw -Prelease deploy
+      -->
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.7</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <configuration>
+                  <!-- Reads the passphrase from settings.xml rather than prompting,
+                       which a non-interactive release build cannot answer. -->
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.11.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <!--
+                Deliberately manual. A release on Central is permanent: it cannot be
+                deleted, replaced, or re-tagged. This uploads the bundle and stops,
+                so the deployment is reviewed in the Portal before it becomes
+                irreversible.
+              -->
+              <autoPublish>false</autoPublish>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
