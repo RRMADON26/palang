@@ -6,7 +6,7 @@
 
   <groupId>io.github.rrmadon26</groupId>
   <artifactId>palang-parent</artifactId>
-  <version>0.1.2</version>
+  <version>0.2.0</version>
   <packaging>pom</packaging>
 
   <name>Palang Parent</name>
