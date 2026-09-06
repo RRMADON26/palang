@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.github.rizkyromadon</groupId>
+  <groupId>io.github.rrmadon26</groupId>
   <artifactId>palang-parent</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Palang Parent</name>
   <description>Cross-cutting concerns toolkit for Spring Boot</description>
-  <url>https://github.com/rizkyromadon/palang</url>
+  <url>https://github.com/RRMADON26/palang</url>
 
   <licenses>
     <license>
@@ -23,16 +23,16 @@
 
   <developers>
     <developer>
-      <id>rizkyromadon</id>
+      <id>RRMADON26</id>
       <name>Rizky Romadon</name>
-      <url>https://github.com/rizkyromadon</url>
+      <url>https://github.com/RRMADON26</url>
     </developer>
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/rizkyromadon/palang.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/rizkyromadon/palang.git</developerConnection>
-    <url>https://github.com/rizkyromadon/palang</url>
+    <connection>scm:git:https://github.com/RRMADON26/palang.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/RRMADON26/palang.git</developerConnection>
+    <url>https://github.com/RRMADON26/palang</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -60,17 +60,17 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>io.github.rizkyromadon</groupId>
+        <groupId>io.github.rrmadon26</groupId>
         <artifactId>palang-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.github.rizkyromadon</groupId>
+        <groupId>io.github.rrmadon26</groupId>
         <artifactId>palang-idempotency-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.github.rizkyromadon</groupId>
+        <groupId>io.github.rrmadon26</groupId>
         <artifactId>palang-testkit</artifactId>
         <version>${project.version}</version>
       </dependency>
