@@ -14,8 +14,20 @@ the domain's DNS settings.
 
 ```
 Type   TXT
-Name   @
+Name   (leave blank)
 Value  <verification key from the Portal>
+TTL    default
+```
+
+Leave the name field **empty**. In Vercel that field names a subdomain, so blank
+means the apex. Entering `@` — correct at many registrars — creates a record at
+`@.rrmadon.com`, which the Portal will never find. Paste the key raw: no quotes,
+no prefix.
+
+Check it resolves before pressing verify:
+
+```bash
+dig +short rrmadon.com TXT
 ```
 
 Verification is automated and usually completes within minutes of the record
