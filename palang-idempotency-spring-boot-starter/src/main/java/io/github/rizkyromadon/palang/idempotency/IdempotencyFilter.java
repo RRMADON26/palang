@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Suppresses duplicate requests carrying the same idempotency key, replaying the
@@ -45,6 +46,28 @@ public class IdempotencyFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(IdempotencyFilter.class);
     private static final String PROBLEM_BASE = "https://github.com/rizkyromadon/palang/problems/";
+
+    /**
+     * Headers that describe this connection or this transfer rather than the payload.
+     *
+     * <p>Replaying them corrupts the response. A captured {@code Transfer-Encoding:
+     * chunked} re-emitted alongside a fixed {@code Content-Length} leaves the client
+     * waiting for a terminating chunk that never arrives, which surfaces as a hang
+     * and then a premature EOF. Framing is the container's job on every response,
+     * including a replayed one.
+     */
+    private static final Set<String> NON_REPLAYABLE_HEADERS = Set.of(
+            "connection",
+            "keep-alive",
+            "transfer-encoding",
+            "content-length",
+            "te",
+            "trailer",
+            "upgrade",
+            "proxy-authenticate",
+            "proxy-authorization",
+            "date",
+            "server");
 
     private final IdempotencyStore store;
     private final KeyResolver<HttpServletRequest> keyResolver;
@@ -165,7 +188,11 @@ public class IdempotencyFilter extends OncePerRequestFilter {
     private void replay(HttpServletResponse response, StoredResponse stored) throws IOException {
         response.reset();
         response.setStatus(stored.status());
-        stored.headers().forEach((name, values) -> values.forEach(value -> response.addHeader(name, value)));
+        stored.headers().forEach((name, values) -> {
+            if (isReplayable(name)) {
+                values.forEach(value -> response.addHeader(name, value));
+            }
+        });
         response.setHeader(REPLAY_HEADER, "true");
         byte[] body = stored.body();
         response.setContentLength(body.length);
@@ -176,10 +203,15 @@ public class IdempotencyFilter extends OncePerRequestFilter {
     private static Map<String, List<String>> headersOf(HttpServletResponse response) {
         Map<String, List<String>> headers = new LinkedHashMap<>();
         for (String name : response.getHeaderNames()) {
-            Collection<String> values = response.getHeaders(name);
-            headers.put(name, new ArrayList<>(values));
+            if (isReplayable(name)) {
+                headers.put(name, new ArrayList<>(response.getHeaders(name)));
+            }
         }
         return headers;
+    }
+
+    private static boolean isReplayable(String headerName) {
+        return !NON_REPLAYABLE_HEADERS.contains(headerName.toLowerCase(Locale.ROOT));
     }
 
     private void writeProblem(HttpServletResponse response,
