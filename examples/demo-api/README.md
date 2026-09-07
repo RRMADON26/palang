@@ -16,6 +16,14 @@ Starts on `:8080` by default. If that's taken, pass a different port:
 ../../mvnw spring-boot:run -Dspring-boot.run.arguments="--server.port=8089"
 ```
 
+Open **http://localhost:8080** (or whichever port you picked) in a browser. The
+app serves a small UI at `/` — buttons for sending a charge, replaying it,
+forcing a conflict, and draining the rate limit, with a live activity log
+underneath. Same-origin, no setup: it talks to the app it's served by.
+
+Prefer the terminal, or want commands you can script and diff? Everything below
+does the exact same thing with `curl`.
+
 ## Try idempotency
 
 ```bash
