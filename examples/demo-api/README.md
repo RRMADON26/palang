@@ -21,6 +21,8 @@ app serves a small UI at `/` — buttons for sending a charge, replaying it,
 forcing a conflict, and draining the rate limit, with a live activity log
 underneath. Same-origin, no setup: it talks to the app it's served by.
 
+![Palang demo UI](docs/screenshot.png)
+
 Prefer the terminal, or want commands you can script and diff? Everything below
 does the exact same thing with `curl`.
 
