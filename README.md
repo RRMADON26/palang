@@ -49,20 +49,20 @@ algorithm; where none exists, Palang builds the whole thing.
 <dependency>
   <groupId>com.rrmadon</groupId>
   <artifactId>palang-idempotency-spring-boot-starter</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 </dependency>
 <dependency>
   <groupId>com.rrmadon</groupId>
   <artifactId>palang-ratelimit-spring-boot-starter</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```gradle
-implementation 'com.rrmadon:palang-idempotency-spring-boot-starter:0.3.0'
-implementation 'com.rrmadon:palang-ratelimit-spring-boot-starter:0.3.0'
+implementation 'com.rrmadon:palang-idempotency-spring-boot-starter:0.4.0'
+implementation 'com.rrmadon:palang-ratelimit-spring-boot-starter:0.4.0'
 ```
 
 No extra repository declaration needed — Central is a default repository in both
@@ -87,7 +87,7 @@ not been released yet. It needs an extra repository and different coordinates:
 <dependency>
   <groupId>com.github.RRMADON26.palang</groupId>
   <artifactId>palang-idempotency-spring-boot-starter</artifactId>
-  <version>v0.3.0</version>
+  <version>v0.4.0</version>
 </dependency>
 ```
 
@@ -163,7 +163,7 @@ matter only appear when callers genuinely overlap.
 
 ## Status
 
-`v0.3.0` — idempotency and rate limiting are both complete and tested, including 32
+`v0.4.0` — idempotency and rate limiting are both complete and tested, including 32
 concurrent callers against a real Redis for each. The API may still change before
 `1.0`.
 
