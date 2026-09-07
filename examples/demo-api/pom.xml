@@ -15,8 +15,15 @@
   <description>Runnable example wiring both Palang starters into a real Spring Boot app</description>
 
   <properties>
-    <!-- A runnable example, not a library artifact — never published. -->
+    <!-- A runnable example, not a library artifact — never published.
+
+         maven.deploy.skip alone is not enough: central-publishing-maven-plugin
+         replaces the deploy phase's default behaviour entirely and does not honour
+         that property. Its own skip switch is skipPublishing, confirmed by staging
+         and uploading this module to a real (unpublished) Central deployment before
+         this was added — caught before anyone clicked Publish, not after. -->
     <maven.deploy.skip>true</maven.deploy.skip>
+    <skipPublishing>true</skipPublishing>
   </properties>
 
   <dependencies>
