@@ -1,0 +1,2 @@
+com.rrmadon.palang.ratelimit.RedisRateLimitAutoConfiguration
+com.rrmadon.palang.ratelimit.RateLimitAutoConfiguration

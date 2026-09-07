@@ -42,12 +42,14 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.release>21</maven.compiler.release>
     <spring-boot.version>3.3.5</spring-boot.version>
+    <bucket4j.version>8.14.0</bucket4j.version>
   </properties>
 
   <modules>
     <module>palang-bom</module>
     <module>palang-core</module>
     <module>palang-idempotency-spring-boot-starter</module>
+    <module>palang-ratelimit-spring-boot-starter</module>
     <module>palang-testkit</module>
   </modules>
 
@@ -68,6 +70,11 @@
       <dependency>
         <groupId>com.rrmadon</groupId>
         <artifactId>palang-idempotency-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.rrmadon</groupId>
+        <artifactId>palang-ratelimit-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

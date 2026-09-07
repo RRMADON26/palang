@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.rrmadon</groupId>
+    <artifactId>palang-parent</artifactId>
+    <version>0.3.0</version>
+  </parent>
+
+  <artifactId>palang-ratelimit-spring-boot-starter</artifactId>
+  <name>Palang Rate Limit Starter</name>
+  <description>Request-rate limiting for Spring Boot, backed by Bucket4j</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <!-- Token-bucket algorithm and distributed backends. Palang wraps this rather
+         than reimplementing bucket math: Bucket4j already handles the edge cases
+         (clock precision, overflow, greedy vs. interval refill) that a hand-rolled
+         limiter tends to get subtly wrong. -->
+    <dependency>
+      <groupId>com.bucket4j</groupId>
+      <artifactId>bucket4j_jdk17-core</artifactId>
+      <version>${bucket4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.bucket4j</groupId>
+      <artifactId>bucket4j_jdk17-redis-common</artifactId>
+      <version>${bucket4j.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.bucket4j</groupId>
+      <artifactId>bucket4j_jdk17-lettuce</artifactId>
+      <version>${bucket4j.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- Bounds the in-memory bucket cache. A ConcurrentHashMap never evicts, and a
+         rate limiter keyed on client IP or API key sees an unbounded stream of
+         distinct keys over the life of a process. -->
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.rrmadon</groupId>
+      <artifactId>palang-testkit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

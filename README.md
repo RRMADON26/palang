@@ -30,21 +30,51 @@ Java has good answers for most cross-cutting concerns and no common answer for t
 one. Teams write it per service, usually get the concurrent case wrong, and find out
 in production.
 
-| Concern | Use | Not this |
-|---|---|---|
-| Rate limiting | [Bucket4j](https://github.com/bucket4j/bucket4j) | — |
-| Retry, circuit breaker | [Resilience4j](https://github.com/resilience4j/resilience4j) | — |
-| Error responses | Spring 6 `ProblemDetail` | — |
-| **Idempotent requests** | **Palang** | — |
+| Concern | Approach |
+|---|---|
+| Rate limiting | **Palang wraps [Bucket4j](https://github.com/bucket4j/bucket4j)** — Spring Boot auto-configuration and a servlet filter over its token-bucket algorithm |
+| Retry, circuit breaker | Use [Resilience4j](https://github.com/resilience4j/resilience4j) directly |
+| Error responses | Use Spring 6 `ProblemDetail` directly |
+| **Idempotent requests** | **Palang implements this** — no comparable library exists |
 
-Palang is deliberately narrow. It is not a gateway and does not try to replace the
-libraries above; a later release will add thin, optional integrations for them under
-one configuration namespace.
+Palang is deliberately narrow. It is not a gateway. Where a solved library already
+exists, Palang wraps it with Spring Boot ergonomics rather than reimplementing the
+algorithm; where none exists, Palang builds the whole thing.
 
 ## Install
 
-Releases are published through [JitPack](https://jitpack.io) while the Maven Central
-namespace is being verified.
+**Maven**
+
+```xml
+<dependency>
+  <groupId>com.rrmadon</groupId>
+  <artifactId>palang-idempotency-spring-boot-starter</artifactId>
+  <version>0.3.0</version>
+</dependency>
+<dependency>
+  <groupId>com.rrmadon</groupId>
+  <artifactId>palang-ratelimit-spring-boot-starter</artifactId>
+  <version>0.3.0</version>
+</dependency>
+```
+
+**Gradle**
+
+```gradle
+implementation 'com.rrmadon:palang-idempotency-spring-boot-starter:0.3.0'
+implementation 'com.rrmadon:palang-ratelimit-spring-boot-starter:0.3.0'
+```
+
+No extra repository declaration needed — Central is a default repository in both
+build tools. Take only the starter you need; neither depends on the other.
+
+Requires **Java 21** and **Spring Boot 3.3+**.
+
+<details>
+<summary>Installing from JitPack instead</summary>
+
+JitPack builds straight from a git tag, which is a way to consume a commit that has
+not been released yet. It needs an extra repository and different coordinates:
 
 ```xml
 <repositories>
@@ -61,7 +91,7 @@ namespace is being verified.
 </dependency>
 ```
 
-Requires **Java 21** and **Spring Boot 3.3+**.
+</details>
 
 ## What it guarantees
 
@@ -84,9 +114,15 @@ the wrong response.
 | Module | Purpose |
 |---|---|
 | `palang-core` | Store and key-resolution SPI. No Spring dependency. |
-| `palang-idempotency-spring-boot-starter` | Auto-configured servlet filter |
+| `palang-idempotency-spring-boot-starter` | Auto-configured servlet filter — duplicate suppression |
+| `palang-ratelimit-spring-boot-starter` | Auto-configured servlet filter — request-rate limiting, via Bucket4j |
 | `palang-testkit` | `MutableClock`, `ConcurrentCallers` |
 | `palang-bom` | Version alignment |
+
+Each starter is independent — install one, both, or neither. When both are present,
+the rate limit filter runs first, so a caller already over their limit is rejected
+before any idempotency-store round trip is spent on a request that would be
+discarded anyway.
 
 ## Choosing a store
 
@@ -119,17 +155,19 @@ matter only appear when callers genuinely overlap.
 ## Documentation
 
 - [Idempotency starter — full configuration and edge cases](palang-idempotency-spring-boot-starter/README.md)
+- [Rate limit starter — full configuration and edge cases](palang-ratelimit-spring-boot-starter/README.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Releasing](RELEASING.md)
 
 ## Status
 
-`v0.3.0` — the idempotency module is complete and tested, including 32 concurrent
-callers against a real Redis. The API may still change before `1.0`.
+`v0.3.0` — idempotency and rate limiting are both complete and tested, including 32
+concurrent callers against a real Redis for each. The API may still change before
+`1.0`.
 
-Planned: rate limiting, resilience presets, and correlation-ID propagation, each as
-a thin integration over the established library rather than a reimplementation.
+Planned: resilience presets and correlation-ID propagation, each as a thin
+integration over the established library rather than a reimplementation.
 
 ## Licence
 
