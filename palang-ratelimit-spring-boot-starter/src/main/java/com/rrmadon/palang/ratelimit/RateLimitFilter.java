@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
@@ -62,6 +63,15 @@ public class RateLimitFilter extends OncePerRequestFilter {
         this.properties = Objects.requireNonNull(properties, "properties");
         this.objectMapper = Objects.requireNonNull(objectMapper, "objectMapper");
         this.clock = Objects.requireNonNull(clock, "clock");
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        // A CORS preflight must succeed structurally for the browser to even
+        // attempt the real request. Charging it against the caller's budget, or
+        // rejecting it outright once the bucket is empty, would silently break
+        // every cross-origin client the moment they are rate limited.
+        return HttpMethod.OPTIONS.matches(request.getMethod());
     }
 
     @Override

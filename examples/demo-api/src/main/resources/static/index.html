@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Palang Demo</title>
+<style>
+  :root {
+    --bg: #F6F7F9;
+    --surface: #FFFFFF;
+    --surface-2: #EEF1F4;
+    --text: #1B222C;
+    --head: #10151D;
+    --muted: #616B7A;
+    --line: #DCE1E7;
+    --line-soft: #E9ECF0;
+    --accent: #2E6F6B;
+    --accent-bg: #E4EFEE;
+    --ok: #1F7A4D;
+    --ok-bg: #E4F3EA;
+    --warn: #B4670F;
+    --warn-bg: #F7E9D6;
+    --danger: #B3261E;
+    --danger-bg: #F8E4E2;
+
+    --sans: -apple-system, "Segoe UI", system-ui, Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F1318;
+      --surface: #171C22;
+      --surface-2: #1E242B;
+      --text: #DEE3E9;
+      --head: #F1F4F7;
+      --muted: #8993A1;
+      --line: #2B323B;
+      --line-soft: #232A32;
+      --accent: #6FBDB6;
+      --accent-bg: #16302D;
+      --ok: #5FC98A;
+      --ok-bg: #10281B;
+      --warn: #E9A445;
+      --warn-bg: #332510;
+      --danger: #E5847A;
+      --danger-bg: #331714;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 28px 24px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--head);
+  }
+  header .sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status.ok { color: var(--ok); border-color: var(--ok); background: var(--ok-bg); }
+  .status.ok .dot { background: var(--ok); }
+  .status.down { color: var(--danger); border-color: var(--danger); background: var(--danger-bg); }
+  .status.down .dot { background: var(--danger); }
+
+  .banner {
+    display: none;
+    border: 1px solid var(--danger);
+    background: var(--danger-bg);
+    color: var(--danger);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .banner.show { display: block; }
+  .banner code { font-family: var(--mono); background: rgba(0,0,0,0.06); padding: 0.1em 0.35em; border-radius: 3px; }
+
+  .panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 760px) {
+    .panels { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .panel h2 {
+    font-size: 14.5px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--head);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .panel h2 .tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface-2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: var(--mono);
+  }
+  .panel p.hint {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+
+  label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field-row { display: flex; gap: 8px; align-items: stretch; }
+
+  input[type="text"], input[type="number"] {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg);
+    color: var(--text);
+    width: 100%;
+  }
+  input:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  button {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 7px;
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  button:hover { border-color: var(--muted); }
+  button:active { transform: translateY(1px); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  button.primary:hover { filter: brightness(1.06); }
+  button.ghost { background: transparent; }
+
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .readout {
+    border: 1px solid var(--line-soft);
+    border-radius: 8px;
+    background: var(--surface-2);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 92px;
+  }
+  .readout .empty { color: var(--muted); font-size: 12.5px; margin: auto 0; }
+  .readout .row1 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pill {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.01em;
+  }
+  .pill.s2 { color: var(--ok); background: var(--ok-bg); }
+  .pill.s4c { color: var(--warn); background: var(--warn-bg); }
+  .pill.s4x, .pill.s5 { color: var(--danger); background: var(--danger-bg); }
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+  .readout pre {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--text);
+  }
+
+  .gauge {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .gauge .meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .gauge .track {
+    height: 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line-soft);
+    overflow: hidden;
+  }
+  .gauge .fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+  .gauge .fill.low { background: var(--warn); }
+  .gauge .fill.empty { background: var(--danger); }
+
+  .logpanel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px 8px;
+  }
+  .logpanel h2 {
+    font-size: 13.5px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: var(--head);
+  }
+  .logpanel p.hint { margin: 0 0 12px; color: var(--muted); font-size: 12.5px; }
+
+  .scroller { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 12.5px; }
+  thead th {
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line-soft);
+    font-family: var(--mono);
+    vertical-align: top;
+    white-space: nowrap;
+  }
+  tbody td.wrap { white-space: normal; font-family: var(--sans); color: var(--muted); }
+  tbody tr:last-child td { border-bottom: 0; }
+  .empty-log { padding: 24px 4px; color: var(--muted); font-size: 13px; text-align: center; }
+
+  footer {
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+    padding-top: 6px;
+  }
+  footer code { font-family: var(--mono); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <h1>Palang demo</h1>
+      <div class="sub">Idempotency and rate limiting, wired into one running Spring Boot app.</div>
+    </div>
+    <div id="status" class="status"><span class="dot"></span><span id="statusText">Checking…</span></div>
+  </header>
+
+  <div id="banner" class="banner">
+    Can't reach this app's own API. That shouldn't normally happen since this page
+    is served by the same server — check the terminal running
+    <code>./mvnw spring-boot:run</code> for errors.
+  </div>
+
+  <div class="panels">
+
+    <section class="panel">
+      <h2>Idempotency <span class="tag">POST /payments</span></h2>
+      <p class="hint">Same key + same body &rarr; replayed. Same key + different body &rarr; rejected as a conflict.</p>
+
+      <div class="field">
+        <label for="idemKey">Idempotency-Key</label>
+        <div class="field-row">
+          <input type="text" id="idemKey" spellcheck="false">
+          <button id="newKeyBtn" class="ghost" title="Generate a fresh key">New key</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="idemAmount">Amount</label>
+        <input type="number" id="idemAmount" value="50000" step="1000">
+      </div>
+
+      <div class="btn-row">
+        <button id="sendChargeBtn" class="primary">Send charge</button>
+        <button id="conflictBtn" class="ghost" title="Same key, different amount — expect 409">Trigger conflict</button>
+      </div>
+
+      <div id="idemReadout" class="readout">
+        <div class="empty">No requests yet.</div>
+      </div>
+
+      <p class="hint">Handler executions so far: <span id="execCount" style="font-family:var(--mono);color:var(--text)">–</span></p>
+    </section>
+
+    <section class="panel">
+      <h2>Rate limit <span class="tag">GET /payments/executions</span></h2>
+      <p class="hint">One bucket per client, shared across <em>every</em> route on this page — including the idempotency panel above.</p>
+
+      <div class="btn-row">
+        <button id="sendOneBtn" class="primary">Send 1 request</button>
+        <button id="sendBurstBtn" class="ghost">Send burst of 8</button>
+      </div>
+
+      <div class="gauge">
+        <div class="meta"><span>Remaining</span><span id="gaugeText">–</span></div>
+        <div class="track"><div id="gaugeFill" class="fill" style="width:100%"></div></div>
+      </div>
+
+      <div id="rlReadout" class="readout">
+        <div class="empty">No requests yet.</div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="logpanel">
+    <h2>Activity</h2>
+    <p class="hint">Every request fired from this page, in one timeline — because it really is one shared bucket underneath.</p>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>Time</th><th>Request</th><th>Status</th><th>Notes</th></tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+      <div id="logEmpty" class="empty-log">Nothing sent yet — try a button above.</div>
+    </div>
+  </div>
+
+  <footer>
+    Palang &middot; <code>examples/demo-api</code> &middot; restart the app for a clean slate
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const el = (id) => document.getElementById(id);
+  const statusEl = el("status");
+  const statusText = el("statusText");
+  const banner = el("banner");
+  const logBody = el("logBody");
+  const logEmpty = el("logEmpty");
+
+  function statusPillClass(code) {
+    if (code >= 200 && code < 300) return "s2";
+    if (code === 409) return "s4c";
+    return "s4x";
+  }
+
+  function addLogRow(method, path, note, response, isError) {
+    logEmpty.style.display = "none";
+    const tr = document.createElement("tr");
+    const time = new Date().toLocaleTimeString();
+
+    const statusHtml = isError
+      ? '<span class="pill s5">ERR</span>'
+      : '<span class="pill ' + statusPillClass(response.status) + '">' + response.status + '</span>';
+
+    tr.innerHTML =
+      '<td>' + time + '</td>' +
+      '<td>' + method + ' ' + path + '</td>' +
+      '<td>' + statusHtml + '</td>' +
+      '<td class="wrap">' + note + '</td>';
+    logBody.prepend(tr);
+    while (logBody.rows.length > 40) logBody.deleteRow(logBody.rows.length - 1);
+  }
+
+  async function request(method, path, opts) {
+    opts = opts || {};
+    try {
+      const response = await fetch(path, {
+        method: method,
+        headers: opts.headers,
+        body: opts.body
+      });
+      const text = await response.text();
+      let json = null;
+      try { json = JSON.parse(text); } catch (e) { /* not JSON, fine */ }
+      setConnected(true);
+      return { ok: true, response: response, text: text, json: json };
+    } catch (err) {
+      setConnected(false);
+      return { ok: false, error: err };
+    }
+  }
+
+  function setConnected(ok) {
+    if (ok) {
+      statusEl.className = "status ok";
+      statusText.textContent = "Connected";
+      banner.classList.remove("show");
+    } else {
+      statusEl.className = "status down";
+      statusText.textContent = "Unreachable";
+      banner.classList.add("show");
+    }
+  }
+
+  function newKey() {
+    return (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + "-" + Math.random().toString(16).slice(2));
+  }
+
+  // ---------- Idempotency panel ----------
+
+  const idemKeyInput = el("idemKey");
+  const idemAmountInput = el("idemAmount");
+  const idemReadout = el("idemReadout");
+  const execCountEl = el("execCount");
+
+  idemKeyInput.value = newKey();
+
+  el("newKeyBtn").addEventListener("click", function () { idemKeyInput.value = newKey(); });
+
+  function renderIdemReadout(result, note) {
+    if (!result.ok) {
+      idemReadout.innerHTML = '<div class="empty">Request failed: ' + result.error + '</div>';
+      return;
+    }
+    const replayed = result.response.headers.get("Idempotency-Replayed") === "true";
+    const badge = replayed ? '<span class="badge">replayed</span>' : "";
+    idemReadout.innerHTML =
+      '<div class="row1">' +
+        '<span class="pill ' + statusPillClass(result.response.status) + '">' + result.response.status + '</span>' +
+        badge +
+      '</div>' +
+      '<pre>' + escapeHtml(result.text) + '</pre>';
+    addLogRow("POST", "/payments", note, result.response, false);
+    refreshExecutionCount();
+  }
+
+  function sendCharge(amount) {
+    const key = idemKeyInput.value.trim();
+    return request("POST", "/payments", {
+      headers: { "Content-Type": "application/json", "Idempotency-Key": key },
+      body: JSON.stringify({ amount: Number(amount) })
+    });
+  }
+
+  el("sendChargeBtn").addEventListener("click", async function () {
+    const result = await sendCharge(idemAmountInput.value);
+    renderIdemReadout(result, "key " + shortKey(idemKeyInput.value));
+  });
+
+  el("conflictBtn").addEventListener("click", async function () {
+    const differentAmount = Number(idemAmountInput.value) + 1;
+    const result = await sendCharge(differentAmount);
+    renderIdemReadout(result, "same key, amount " + differentAmount + " — expect 409");
+  });
+
+  async function refreshExecutionCount() {
+    const result = await request("GET", "/payments/executions");
+    if (result.ok && result.json) execCountEl.textContent = result.json.count;
+  }
+
+  // ---------- Rate limit panel ----------
+
+  const rlReadout = el("rlReadout");
+  const gaugeFill = el("gaugeFill");
+  const gaugeText = el("gaugeText");
+
+  function renderGauge(remaining, limit) {
+    if (limit === null || isNaN(limit)) return;
+    const pct = Math.max(0, Math.min(100, (remaining / limit) * 100));
+    gaugeFill.style.width = pct + "%";
+    gaugeFill.className = "fill" + (remaining === 0 ? " empty" : pct < 34 ? " low" : "");
+    gaugeText.textContent = remaining + " / " + limit;
+  }
+
+  function renderRlReadout(result) {
+    if (!result.ok) {
+      rlReadout.innerHTML = '<div class="empty">Request failed: ' + result.error + '</div>';
+      return;
+    }
+    const limit = result.response.headers.get("RateLimit-Limit");
+    const remaining = result.response.headers.get("RateLimit-Remaining");
+    const retryAfter = result.response.headers.get("Retry-After");
+    if (limit !== null) renderGauge(Number(remaining), Number(limit));
+
+    let extra = "";
+    if (result.response.status === 429) {
+      extra = '<div class="pill s4x" style="margin-top:2px">Retry-After ' + retryAfter + 's</div>';
+    }
+    rlReadout.innerHTML =
+      '<div class="row1"><span class="pill ' + statusPillClass(result.response.status) + '">' + result.response.status + '</span></div>' +
+      extra +
+      '<pre>' + escapeHtml(result.text) + '</pre>';
+    addLogRow("GET", "/payments/executions", limit !== null ? ("remaining " + remaining + "/" + limit) : "", result.response, false);
+  }
+
+  el("sendOneBtn").addEventListener("click", async function () {
+    const result = await request("GET", "/payments/executions");
+    renderRlReadout(result);
+  });
+
+  el("sendBurstBtn").addEventListener("click", async function (e) {
+    e.target.disabled = true;
+    try {
+      for (let i = 0; i < 8; i++) {
+        const result = await request("GET", "/payments/executions");
+        renderRlReadout(result);
+      }
+    } finally {
+      e.target.disabled = false;
+    }
+  });
+
+  // ---------- helpers ----------
+
+  function shortKey(key) {
+    return key.length > 12 ? key.slice(0, 8) + "…" : key;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // ---------- initial connectivity check ----------
+
+  (async function checkConnection() {
+    const result = await request("GET", "/payments/executions");
+    if (result.ok) {
+      if (result.json) execCountEl.textContent = result.json.count;
+      const limit = result.response.headers.get("RateLimit-Limit");
+      const remaining = result.response.headers.get("RateLimit-Remaining");
+      if (limit !== null) renderGauge(Number(remaining), Number(limit));
+    }
+  })();
+})();
+</script>
+</body>
+</html>
