@@ -1,0 +1,17 @@
+# Activate with: --spring.profiles.active=redis
+#
+# Points at the standard Redis default (127.0.0.1:6379) so this works out of the
+# box for anyone cloning the repo. If you already have something else bound to
+# 6379, override on the command line, e.g.:
+#   --spring.data.redis.port=6399
+palang:
+  idempotency:
+    store: redis
+  rate-limit:
+    store: redis
+
+spring:
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379

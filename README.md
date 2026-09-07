@@ -156,6 +156,7 @@ matter only appear when callers genuinely overlap.
 
 - [Idempotency starter — full configuration and edge cases](palang-idempotency-spring-boot-starter/README.md)
 - [Rate limit starter — full configuration and edge cases](palang-ratelimit-spring-boot-starter/README.md)
+- [Runnable demo — try both starters against real HTTP requests](examples/demo-api/README.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Releasing](RELEASING.md)

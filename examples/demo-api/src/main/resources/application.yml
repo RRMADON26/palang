@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+palang:
+  idempotency:
+    store: memory        # switch to redis: --spring.profiles.active=redis
+    ttl: 24h
+  rate-limit:
+    store: memory
+    # The library default is 100 requests/minute — realistic for production.
+    # Set low here on purpose so the 429 in the walkthrough shows up after a
+    # handful of curl calls instead of a hundred.
+    capacity: 5
+    refill-period: 1m
+    fail-open: true
+
+logging:
+  level:
+    com.rrmadon.palang: DEBUG
