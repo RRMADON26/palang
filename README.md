@@ -1,5 +1,11 @@
 # Palang
 
+[![CI](https://github.com/RRMADON26/palang/actions/workflows/ci.yml/badge.svg)](https://github.com/RRMADON26/palang/actions/workflows/ci.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rrmadon/palang-idempotency-spring-boot-starter?label=Maven%20Central)](https://central.sonatype.com/artifact/com.rrmadon/palang-idempotency-spring-boot-starter)
+[![License](https://img.shields.io/github/license/RRMADON26/palang)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
+
 **Duplicate request suppression for Spring Boot.** A user taps "Pay" twice, a flaky
 network makes the mobile client retry, or a webhook is redelivered — and the charge
 happens twice. Palang makes the second request return the first one's response
@@ -169,6 +175,27 @@ concurrent callers against a real Redis for each. The API may still change befor
 
 Planned: resilience presets and correlation-ID propagation, each as a thin
 integration over the established library rather than a reimplementation.
+
+## Contributing
+
+PRs welcome — a typo fix, a missing test, a whole new starter module, all of it.
+
+A few places to start if you don't already have your own itch to scratch:
+
+- **Resilience presets** and **correlation-ID propagation** — both already on the
+  roadmap above, neither built yet.
+- **Per-endpoint or per-plan rate limits** — the rate-limit starter currently
+  ships one global bucket per client across every route, by design for v1.
+- **A WebFlux equivalent** — both starters are servlet-based today.
+- **A store or limiter backend** for whatever you already run in production.
+- **Benchmarks** — there are none yet.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to build, test, and what a PR
+needs. Short version: `./mvnw verify`, and any concurrency-sensitive change needs
+a test using `ConcurrentCallers` (from `palang-testkit`), not a sequential loop —
+that's literally how the hop-by-hop header replay bug was caught before v0.3.0
+shipped. This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md).
+Security issues go through [SECURITY.md](SECURITY.md), not a public issue.
 
 ## Licence
 
